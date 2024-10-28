@@ -10,38 +10,42 @@ const insertIcon = async (icon) => {
   return rows;
 };
 
+// Função para atualizar ícones no banco de dados
+const updateIcon = async (icon) => {
+  const [rows] = await db.query(
+    'UPDATE icons SET src = ? WHERE icon_id = ?',
+    [icon.src, icon.id]
+  );
+  return rows;
+};
+
+// Função para deletar ícones do banco de dados
+const deleteIcon = async (icon_id) => {
+  const [rows] = await db.query(
+    'DELETE FROM icons WHERE icon_id = ?',
+    [icon_id]
+  );
+  return rows;
+};
+
 // Função para buscar todos os ícones do banco de dados
 const getIcons = async () => {
   const [rows] = await db.query('SELECT * FROM icons');
   return rows;
 };
-
-// Função para atualizar um ícone no banco de dados
-const updateIcon = async (icon) => {
-  const [result] = await db.query(
-    'UPDATE icons SET src = ? WHERE icon_id = ?',
-    [icon.src, icon.id]
+// Função para buscar um ícone específico por ID
+const getIconById = async (icon_id) => {
+  const [rows] = await db.query(
+    'SELECT * FROM icons WHERE icon_id = ?',
+    [icon_id]
   );
-  return result;
+  return rows[0]; // Retorna o primeiro (e único) resultado
 };
 
-// Função para buscar todos os IDs dos ícones
-const getIconIds = async () => {
-  const [rows] = await db.query('SELECT icon_id FROM icons'); // Busca apenas os IDs
-  return rows.map(row => row.icon_id); // Retorna somente os valores de icon_id
-};
-
-// Função para deletar um ícone do banco de dados
-const deleteIcon = async (iconId) => {
-  const [result] = await db.query('DELETE FROM icons WHERE icon_id = ?', [iconId]);
-  return result;
-};
-
-// Exporta as funções do modelo
 module.exports = {
   insertIcon,
+  updateIcon, // Exporta a nova função
+  deleteIcon, // Exporta a nova função
   getIcons,
-  updateIcon,
-  deleteIcon,
-  getIconIds // Exporta a função de buscar IDs
+  getIconById,
 };
