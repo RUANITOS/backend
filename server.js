@@ -3,7 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const multer = require('multer'); // Importando multer para upload de arquivos
 const iconRoutes = require('./routes/icons');
-const mosaicRoutes = require('./routes/mosaic');
+
 dotenv.config();
 const app = express();
 
@@ -19,7 +19,6 @@ const upload = multer({ storage });
 
 // Rota para ícones (usando o multer para uploads)
 app.use('/api/icons', upload.single('src'), iconRoutes);
-app.use('/api/mosaics', mosaicRoutes);
 
 const PORT = process.env.PORT || 5000;
 
