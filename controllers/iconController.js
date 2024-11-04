@@ -21,6 +21,8 @@ const addIcon = async (req, res) => {
     const iconData = {
       id: req.body.icon_id,
       src: req.file.buffer,
+      id_implementacao: req.body.id_implementacao || null,
+      descricao: req.body.descricao || null,
     };
 
     await insertIcon(iconData);
@@ -36,6 +38,8 @@ const modifyIcon = async (req, res) => {
     const iconData = {
       id: req.body.icon_id,
       src: req.file ? req.file.buffer : null, // Atualiza o src apenas se um novo arquivo for enviado
+      id_implementacao: req.body.id_implementacao || null,
+      descricao: req.body.descricao || null,
     };
 
     await updateIcon(iconData);
@@ -55,6 +59,7 @@ const removeIcon = async (req, res) => {
     res.status(500).json({ message: 'Erro ao deletar ícone', error });
   }
 };
+
 // Função para buscar todos os ícones do banco de dados (IDs e SRCs)
 const fetchIconIds = async (req, res) => {
   try {
@@ -68,7 +73,8 @@ const fetchIconIds = async (req, res) => {
     res.status(500).json({ message: 'Erro ao buscar IDs de ícones', error });
   }
 };
-// Função para buscar um ícone específico por ID
+
+// Função para buscar um ícone específico por ID com todos os novos campos
 const fetchIconById = async (req, res) => {
   try {
     const { icon_id } = req.params;
@@ -88,8 +94,8 @@ const fetchIconById = async (req, res) => {
 module.exports = {
   fetchIcons,
   addIcon,
-  modifyIcon, // Função para modificar ícone
-  removeIcon, // Função para remover ícone
+  modifyIcon,
+  removeIcon,
   fetchIconIds,
   fetchIconById,
 };
