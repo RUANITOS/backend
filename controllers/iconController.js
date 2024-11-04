@@ -1,5 +1,5 @@
 // backend/controllers/iconController.js
-const { insertIcon, getIcons, updateIcon, deleteIcon, getIconIds } = require('../models/iconModel');
+const { insertIcon, getIcons, updateIcon, deleteIcon, getIconIds,getIconById  } = require('../models/iconModel');
 
 // Função para buscar todos os ícones do banco de dados
 const fetchIcons = async (req, res) => {
@@ -30,7 +30,9 @@ const addIcon = async (req, res) => {
 
     const iconData = {
       id: req.body.icon_id,
-      src: req.file.buffer // O arquivo é tratado como BLOB
+      src: req.file.buffer, // O arquivo é tratado como BLOB
+      id_implementacao: req.body.id_implementacao,
+      descricao: req.body.descricao
     };
 
     await insertIcon(iconData);
@@ -43,9 +45,15 @@ const addIcon = async (req, res) => {
 // Função para atualizar um ícone existente
 const updateIconData = async (req, res) => {
   try {
+    if (!req.params.id) {
+      return res.status(400).json({ message: 'ID do ícone é necessário' });
+    }
+
     const iconData = {
       id: req.params.id,
-      src: req.file ? req.file.buffer : req.body.src // Atualiza o campo src caso um novo arquivo seja enviado
+      src: req.file ? req.file.buffer : null,
+      id_implementacao: req.body.id_implementacao || null,
+      descricao: req.body.descricao || null
     };
 
     const result = await updateIcon(iconData);
@@ -62,7 +70,8 @@ const updateIconData = async (req, res) => {
 // Função para deletar um ícone pelo ID
 const deleteIconData = async (req, res) => {
   try {
-    const result = await deleteIcon(req.params.id);
+    const icon_id = req.params.id;
+    const result = await deleteIcon(icon_id);
     if (result.affectedRows > 0) {
       res.status(200).json({ message: 'Ícone deletado com sucesso!' });
     } else {
@@ -72,6 +81,23 @@ const deleteIconData = async (req, res) => {
     res.status(500).json({ message: 'Erro ao deletar ícone', error });
   }
 };
+// Função para buscar um ícone específico pelo ID
+const fetchIconById = async (req, res) => {
+  try {
+    const iconId = req.params.id;
+    const icon = await getIconById(iconId);
+
+    if (icon) {
+      res.status(200).json(icon);
+    } else {
+      res.status(404).json({ message: 'Ícone não encontrado' });
+    }
+  } catch (error) {
+    console.error('Erro ao buscar o ícone:', error); // Adicione um log para depuração
+    res.status(500).json({ message: 'Erro ao buscar o ícone', error });
+  }
+};
+
 
 // Exporta as funções
 module.exports = {
@@ -79,5 +105,6 @@ module.exports = {
   addIcon,
   updateIconData,
   deleteIconData,
-  fetchIconIds
+  fetchIconIds,
+  fetchIconById
 };
