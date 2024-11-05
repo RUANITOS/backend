@@ -1,6 +1,7 @@
 // backend/models/iconModel.js
 const db = require('../config/db');
 
+// Função para inserir ícones no banco de dados
 const insertIcon = async (icon) => {
   const [rows] = await db.query(
     'INSERT INTO icons (icon_id, src, id_implementacao, descricao, dt_criacao, dt_modificacao) VALUES (?, ?, ?, ?, NOW(), NOW())',
@@ -17,6 +18,7 @@ const updateIcon = async (icon) => {
   );
   return rows;
 };
+
 // Função para deletar ícones do banco de dados
 const deleteIcon = async (icon_id) => {
   const [rows] = await db.query(
@@ -40,11 +42,6 @@ const getIconById = async (icon_id) => {
   );
   return rows[0]; // Retorna o primeiro (e único) resultado
 };
-// Função para buscar apenas os IDs dos ícones do banco de dados
-const getIconIds = async () => {
-  const [rows] = await db.query('SELECT icon_id FROM icons');
-  return rows;
-};
 
 module.exports = {
   insertIcon,
@@ -52,5 +49,4 @@ module.exports = {
   deleteIcon,
   getIcons,
   getIconById,
-  getIconIds
 };
