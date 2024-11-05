@@ -28,6 +28,7 @@ const addMosaic = async (req, res) => {
             descricao_completa: req.body.descricao_completa,
             descricao_resumida: req.body.descricao_resumida,
             conteudo_efetivo: req.body.conteudo_efetivo,
+            origem_conteudo: req.body.origem_conteudo
         };
 
         await insertMosaic(mosaicData);
@@ -48,6 +49,7 @@ const modifyMosaic = async (req, res) => {
             descricao_completa: req.body.descricao_completa,
             descricao_resumida: req.body.descricao_resumida,
             conteudo_efetivo: req.body.conteudo_efetivo,
+            origem_conteudo: req.body.origem_conteudo
         };
 
         await updateMosaic(mosaicData);

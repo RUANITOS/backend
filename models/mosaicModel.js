@@ -7,8 +7,8 @@ const insertMosaic = async (mosaic) => {
     `INSERT INTO mosaic (
        dt_criacao, posicao_linha, posicao_coluna,  
       titulo_celula, id_icone, descricao_completa, descricao_resumida, 
-      dt_ultima_atualizacao, conteudo_efetivo
-    ) VALUES (NOW(), ?, ?, ?, ?, ?, ?, NOW(), ?)`,
+      dt_ultima_atualizacao, conteudo_efetivo, origem_conteudo
+    ) VALUES (NOW(), ?, ?, ?, ?, ?, ?, NOW(), ?, ?)`,
     [
       mosaic.posicao_linha,
       mosaic.posicao_coluna,
@@ -16,7 +16,8 @@ const insertMosaic = async (mosaic) => {
       mosaic.id_icone,
       mosaic.descricao_completa,
       mosaic.descricao_resumida,
-      mosaic.conteudo_efetivo
+      mosaic.conteudo_efetivo,
+      mosaic.origem_conteudo
     ]
   );
   return rows;
@@ -28,8 +29,8 @@ const updateMosaic = async (mosaic) => {
     `UPDATE mosaic SET
       posicao_linha = ?, posicao_coluna = ?, titulo_celula = ?, 
       id_icone = ?, descricao_completa = ?, descricao_resumida = ?, 
-      dt_ultima_atualizacao = NOW(), conteudo_efetivo = ?
-    WHERE id_implem = ?`,
+      dt_ultima_atualizacao = NOW(), conteudo_efetivo = ?, origem_conteudo = ?
+    WHERE id = ?`,
     [
       mosaic.posicao_linha,
       mosaic.posicao_coluna,
@@ -38,7 +39,8 @@ const updateMosaic = async (mosaic) => {
       mosaic.descricao_completa,
       mosaic.descricao_resumida,
       mosaic.conteudo_efetivo,
-      mosaic.id_implem
+      mosaic.id,
+      mosaic.origem_conteudo
     ]
   );
   return rows;
@@ -64,7 +66,7 @@ const getMosaicById = async (id) => {
   const [rows] = await db.query(
     `SELECT id, dt_criacao, posicao_linha, posicao_coluna, 
       titulo_celula, id_icone, descricao_completa, descricao_resumida, 
-      dt_ultima_atualizacao, conteudo_efetivo
+      dt_ultima_atualizacao, conteudo_efetivo,origem_conteudo
     FROM mosaic WHERE id = ?`,
     [id]
   );

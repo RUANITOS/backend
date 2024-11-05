@@ -17,12 +17,12 @@ router.get('/', fetchMosaics);
 router.post('/add', addMosaic);
 
 // Rota para modificar um mosaico
-router.put('/modify', modifyMosaic); // Use PUT para modificar
+router.put('/modify/:id', modifyMosaic); // Use PUT para modificar
 
 // Rota para deletar um mosaico
-router.delete('/delete/:id_implem', removeMosaic); // Use DELETE para remover
+router.delete('/delete/:id', removeMosaic); // Use DELETE para remover
 
 // Rota para buscar um mosaico específico por ID
-router.get('/:id_implem', fetchMosaicById); // Nova rota para buscar mosaico específico
+router.get('/:id', fetchMosaicById); // Nova rota para buscar mosaico específico
 
 module.exports = router;
