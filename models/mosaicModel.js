@@ -5,15 +5,13 @@ const db = require('../config/db');
 const insertMosaic = async (mosaic) => {
   const [rows] = await db.query(
     `INSERT INTO mosaic (
-      id_implem, dt_criacao, posicao_linha, posicao_coluna, codigo_id_icone, 
+       dt_criacao, posicao_linha, posicao_coluna,  
       titulo_celula, id_icone, descricao_completa, descricao_resumida, 
       dt_ultima_atualizacao, conteudo_efetivo
-    ) VALUES (?, NOW(), ?, ?, ?, ?, ?, ?, ?, NOW(), ?)`,
+    ) VALUES (NOW(), ?, ?, ?, ?, ?, ?, NOW(), ?)`,
     [
-      mosaic.id_implem,
       mosaic.posicao_linha,
       mosaic.posicao_coluna,
-      mosaic.codigo_id_icone,
       mosaic.titulo_celula,
       mosaic.id_icone,
       mosaic.descricao_completa,
@@ -28,14 +26,13 @@ const insertMosaic = async (mosaic) => {
 const updateMosaic = async (mosaic) => {
   const [rows] = await db.query(
     `UPDATE mosaic SET
-      posicao_linha = ?, posicao_coluna = ?, codigo_id_icone = ?, titulo_celula = ?, 
+      posicao_linha = ?, posicao_coluna = ?, titulo_celula = ?, 
       id_icone = ?, descricao_completa = ?, descricao_resumida = ?, 
       dt_ultima_atualizacao = NOW(), conteudo_efetivo = ?
     WHERE id_implem = ?`,
     [
       mosaic.posicao_linha,
       mosaic.posicao_coluna,
-      mosaic.codigo_id_icone,
       mosaic.titulo_celula,
       mosaic.id_icone,
       mosaic.descricao_completa,
@@ -48,10 +45,10 @@ const updateMosaic = async (mosaic) => {
 };
 
 // Função para deletar um mosaico do banco de dados
-const deleteMosaic = async (id_implem) => {
+const deleteMosaic = async (id) => {
   const [rows] = await db.query(
-    'DELETE FROM mosaic WHERE id_implem = ?',
-    [id_implem]
+    'DELETE FROM mosaic WHERE id = ?',
+    [id]
   );
   return rows;
 };
@@ -63,13 +60,13 @@ const getMosaics = async () => {
 };
 
 // Função para buscar um mosaico específico por ID
-const getMosaicById = async (id_implem) => {
+const getMosaicById = async (id) => {
   const [rows] = await db.query(
-    `SELECT id_implem, dt_criacao, posicao_linha, posicao_coluna, codigo_id_icone, 
+    `SELECT id, dt_criacao, posicao_linha, posicao_coluna, 
       titulo_celula, id_icone, descricao_completa, descricao_resumida, 
       dt_ultima_atualizacao, conteudo_efetivo
-    FROM mosaic WHERE id_implem = ?`,
-    [id_implem]
+    FROM mosaic WHERE id = ?`,
+    [id]
   );
   return rows[0]; // Retorna o primeiro (e único) resultado
 };

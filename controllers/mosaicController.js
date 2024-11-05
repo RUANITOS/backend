@@ -21,10 +21,8 @@ const fetchMosaics = async (req, res) => {
 const addMosaic = async (req, res) => {
     try {
         const mosaicData = {
-            id_implem: req.body.id_implem,
             posicao_linha: req.body.posicao_linha, // Alterado para posicao_linha
             posicao_coluna: req.body.posicao_coluna, // Alterado para posicao_coluna
-            codigo_id_icone: req.body.codigo_id_icone,
             titulo_celula: req.body.titulo_celula,
             id_icone: req.body.id_icone,
             descricao_completa: req.body.descricao_completa,
@@ -43,10 +41,8 @@ const addMosaic = async (req, res) => {
 const modifyMosaic = async (req, res) => {
     try {
         const mosaicData = {
-            id_implem: req.body.id_implem,
             posicao_linha: req.body.posicao_linha, // Alterado para posicao_linha
             posicao_coluna: req.body.posicao_coluna, // Alterado para posicao_coluna
-            codigo_id_icone: req.body.codigo_id_icone,
             titulo_celula: req.body.titulo_celula,
             id_icone: req.body.id_icone,
             descricao_completa: req.body.descricao_completa,
@@ -64,8 +60,8 @@ const modifyMosaic = async (req, res) => {
 // Função para deletar um mosaico
 const removeMosaic = async (req, res) => {
     try {
-        const { id_implem } = req.params;
-        await deleteMosaic(id_implem);
+        const { id } = req.params;
+        await deleteMosaic(id);
         res.status(200).json({ message: 'Mosaico deletado com sucesso!' });
     } catch (error) {
         res.status(500).json({ message: 'Erro ao deletar mosaico', error });
@@ -75,8 +71,8 @@ const removeMosaic = async (req, res) => {
 // Função para buscar um mosaico específico por ID
 const fetchMosaicById = async (req, res) => {
     try {
-        const { id_implem } = req.params;
-        const mosaic = await getMosaicById(id_implem);
+        const { id } = req.params;
+        const mosaic = await getMosaicById(id);
 
         if (!mosaic) {
             return res.status(404).json({ message: 'Mosaico não encontrado' });
