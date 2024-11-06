@@ -41,6 +41,7 @@ const addMosaic = async (req, res) => {
 // Função para atualizar um mosaico
 const modifyMosaic = async (req, res) => {
     try {
+        const { id } = req.params;
         const mosaicData = {
             posicao_linha: req.body.posicao_linha, // Alterado para posicao_linha
             posicao_coluna: req.body.posicao_coluna, // Alterado para posicao_coluna
@@ -52,7 +53,7 @@ const modifyMosaic = async (req, res) => {
             origem_conteudo: req.body.origem_conteudo
         };
 
-        await updateMosaic(mosaicData);
+        await updateMosaic(id,mosaicData);
         res.status(200).json({ message: 'Mosaico modificado com sucesso!' });
     } catch (error) {
         res.status(500).json({ message: 'Erro ao modificar mosaico', error });
