@@ -5,7 +5,8 @@ const {
   modifyMosaic,
   removeMosaic,
   fetchMosaicById,
-  fetchMosaicByPosition // Importa a função para busca por posição
+  fetchMosaicByPosition, // Importa a função para busca por posição
+  modifyMosaicPosition
 } = require('../controllers/mosaicController');
 
 const router = express.Router();
