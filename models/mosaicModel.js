@@ -45,6 +45,16 @@ const updateMosaic = async (mosaic) => {
   );
   return rows;
 };
+// Função para atualizar apenas a posição (linha e coluna) de um mosaico
+const updateMosaicPosition = async (id, posicao_linha, posicao_coluna) => {
+  const [rows] = await db.query(
+    `UPDATE mosaic SET
+      posicao_linha = ?, posicao_coluna = ?, dt_ultima_atualizacao = NOW()
+    WHERE id = ?`,
+    [posicao_linha, posicao_coluna, id]
+  );
+  return rows;
+};
 
 // Função para deletar um mosaico do banco de dados
 const deleteMosaic = async (id) => {
@@ -72,6 +82,11 @@ const getMosaicById = async (id) => {
   );
   return rows[0]; // Retorna o primeiro (e único) resultado
 };
+const getMosaicByPosition = async (row, col) => {
+  const query = 'SELECT * FROM mosaic WHERE posicao_linha = ? AND posicao_coluna = ?';
+  const [rows] = await db.execute(query, [row, col]);
+  return rows[0]; // Retorna o primeiro resultado, se houver
+};
 
 module.exports = {
   insertMosaic,
@@ -79,4 +94,6 @@ module.exports = {
   deleteMosaic,
   getMosaics,
   getMosaicById,
+  getMosaicByPosition,
+  updateMosaicPosition
 };

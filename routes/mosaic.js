@@ -1,4 +1,3 @@
-// backend/routes/mosaic.js
 const express = require('express');
 const {
   fetchMosaics,
@@ -6,6 +5,7 @@ const {
   modifyMosaic,
   removeMosaic,
   fetchMosaicById,
+  fetchMosaicByPosition // Importa a função para busca por posição
 } = require('../controllers/mosaicController');
 
 const router = express.Router();
@@ -17,12 +17,17 @@ router.get('/', fetchMosaics);
 router.post('/add', addMosaic);
 
 // Rota para modificar um mosaico
-router.put('/modify/:id', modifyMosaic); // Use PUT para modificar
+router.put('/modify/:id', modifyMosaic);
 
 // Rota para deletar um mosaico
-router.delete('/delete/:id', removeMosaic); // Use DELETE para remover
+router.delete('/delete/:id', removeMosaic);
 
 // Rota para buscar um mosaico específico por ID
-router.get('/:id', fetchMosaicById); // Nova rota para buscar mosaico específico
+router.get('/:id', fetchMosaicById);
+
+// Rota para buscar um mosaico por linha e coluna
+router.get('/position/:row/:col', fetchMosaicByPosition);
+// Rota para modificar apenas a posição de um mosaico
+router.put('/modify-position/:id', modifyMosaicPosition);
 
 module.exports = router;

@@ -5,6 +5,8 @@ const {
     updateMosaic,
     deleteMosaic,
     getMosaicById,
+    getMosaicByPosition,
+    updateMosaicPosition
 } = require('../models/mosaicModel');
 
 // Função para buscar todos os mosaicos do banco de dados
@@ -53,7 +55,7 @@ const modifyMosaic = async (req, res) => {
             origem_conteudo: req.body.origem_conteudo
         };
 
-        await updateMosaic(id,mosaicData);
+        await updateMosaic(id, mosaicData);
         res.status(200).json({ message: 'Mosaico modificado com sucesso!' });
     } catch (error) {
         res.status(500).json({ message: 'Erro ao modificar mosaico', error });
@@ -86,7 +88,32 @@ const fetchMosaicById = async (req, res) => {
         res.status(500).json({ message: 'Erro ao buscar mosaico específico', error });
     }
 };
+// Função para buscar um mosaico por linha e coluna
+const fetchMosaicByPosition = async (req, res) => {
+    try {
+        const { row, col } = req.params;
+        const mosaic = await getMosaicByPosition(row, col);
 
+        if (!mosaic) {
+            return res.status(404).json({ message: 'Mosaico não encontrado para a posição fornecida' });
+        }
+
+        res.status(200).json(mosaic);
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao buscar mosaico por posição', error });
+    }
+};
+// Função para modificar apenas a posição de um mosaico
+const modifyMosaicPosition = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { posicao_linha, posicao_coluna } = req.body;
+        await updateMosaicPosition(id, posicao_linha, posicao_coluna);
+        res.status(200).json({ message: 'Posição do mosaico modificada com sucesso!' });
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao modificar posição do mosaico', error });
+    }
+};
 // Exporta as funções
 module.exports = {
     fetchMosaics,
@@ -94,4 +121,6 @@ module.exports = {
     modifyMosaic,
     removeMosaic,
     fetchMosaicById,
+    fetchMosaicByPosition,
+    modifyMosaicPosition
 };
