@@ -20,7 +20,7 @@ const upload = multer({ storage });
 // Rota para ícones (usando o multer para uploads)
 app.use('/api/icons', upload.single('src'), iconRoutes);
 app.use('/api/mosaics',mosaicRoutes);
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
