@@ -12,19 +12,20 @@ const {
 // Função para buscar todos os mosaicos do banco de dados
 const fetchMosaics = async (req, res) => {
     try {
-        const mosaics = await getMosaics();
-        res.status(200).json(mosaics);
+      const mosaics = await getMosaics();
+      res.status(200).json(mosaics);
     } catch (error) {
-        res.status(500).json({ message: 'Erro ao buscar mosaicos', error });
+      console.error("Erro ao buscar mosaicos:", error); // Log detalhado do erro
+      res.status(500).json({ message: "Erro ao buscar mosaicos", error });
     }
-};
+  };
 
 // Função para adicionar um mosaico ao banco de dados a partir do formulário
 const addMosaic = async (req, res) => {
     try {
         const mosaicData = {
-            posicao_linha: req.body.posicao_linha, // Alterado para posicao_linha
-            posicao_coluna: req.body.posicao_coluna, // Alterado para posicao_coluna
+            posicao_linha: req.body.posicao_linha,
+            posicao_coluna: req.body.posicao_coluna,
             titulo_celula: req.body.titulo_celula,
             id_icone: req.body.id_icone,
             descricao_completa: req.body.descricao_completa,
@@ -45,8 +46,8 @@ const modifyMosaic = async (req, res) => {
     try {
         const { id } = req.params;
         const mosaicData = {
-            posicao_linha: req.body.posicao_linha, // Alterado para posicao_linha
-            posicao_coluna: req.body.posicao_coluna, // Alterado para posicao_coluna
+            posicao_linha: req.body.posicao_linha,
+            posicao_coluna: req.body.posicao_coluna,
             titulo_celula: req.body.titulo_celula,
             id_icone: req.body.id_icone,
             descricao_completa: req.body.descricao_completa,
@@ -55,7 +56,7 @@ const modifyMosaic = async (req, res) => {
             origem_conteudo: req.body.origem_conteudo
         };
 
-        await updateMosaic(id, mosaicData);
+        await updateMosaic({ ...mosaicData, id });
         res.status(200).json({ message: 'Mosaico modificado com sucesso!' });
     } catch (error) {
         res.status(500).json({ message: 'Erro ao modificar mosaico', error });
@@ -88,6 +89,7 @@ const fetchMosaicById = async (req, res) => {
         res.status(500).json({ message: 'Erro ao buscar mosaico específico', error });
     }
 };
+
 // Função para buscar um mosaico por linha e coluna
 const fetchMosaicByPosition = async (req, res) => {
     try {
@@ -103,6 +105,7 @@ const fetchMosaicByPosition = async (req, res) => {
         res.status(500).json({ message: 'Erro ao buscar mosaico por posição', error });
     }
 };
+
 // Função para modificar apenas a posição de um mosaico
 const modifyMosaicPosition = async (req, res) => {
     try {
@@ -114,6 +117,7 @@ const modifyMosaicPosition = async (req, res) => {
         res.status(500).json({ message: 'Erro ao modificar posição do mosaico', error });
     }
 };
+
 // Exporta as funções
 module.exports = {
     fetchMosaics,
