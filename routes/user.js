@@ -5,8 +5,7 @@ const {
   modifyUser,
   removeUser,
   fetchUserById,
-  fetchUserByEmail,
-  modifyUserPosition
+  verifyUser
 } = require('../controllers/userController');
 
 const router = express.Router();
@@ -18,18 +17,14 @@ router.get('/', fetchUsers);
 router.post('/add', addUser);
 
 // Rota para modificar um usuário
-router.put('/modify/:id', modifyUser);
+router.put('/modify/:id_user', modifyUser);
 
 // Rota para deletar um usuário
-router.delete('/delete/:id', removeUser);
+router.delete('/delete/:id_user', removeUser);
 
 // Rota para buscar um usuário específico por ID
-router.get('/:id', fetchUserById);
+router.get('/:id_user', fetchUserById);
 
-// Rota para buscar um usuário por email
-router.get('/email/:email', fetchUserByEmail);
-
-// Rota para modificar a posição (ou outro atributo) de um usuário
-router.put('/modify-position/:id', modifyUserPosition);
+router.post('/login', verifyUser);
 
 module.exports = router;

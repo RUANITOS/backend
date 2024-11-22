@@ -1,34 +1,33 @@
-const db = require('../config/db');
 const { sql, poolPromise } = require('../config/db');
 
 // Função para buscar todos os usuários do banco de dados
 const getUsers = async () => {
   try {
-    const pool = await poolPromise;  // Obtém a conexão do pool
-    const result = await pool.request() // Faz a requisição
-      .query('SELECT * FROM dbo.usuariosmosaico'); // Executa a query
-    return result.recordset;  // Retorna os resultados da query
+    const pool = await poolPromise;
+    const result = await pool.request()
+      .query('SELECT id_user, id_implem, nome, email, privilegios, senha FROM dbo.usuariosmosaico');
+    return result.recordset; // Retorna os resultados da query
   } catch (error) {
     console.error("Erro ao buscar usuários:", error);
-    throw error;  // Lança o erro para ser tratado no controlador
+    throw error; // Lança o erro para ser tratado no controlador
   }
 };
 
 // Função para inserir um usuário no banco de dados
 const insertUser = async (user) => {
   try {
-    const pool = await poolPromise;  // Obtém a conexão do pool
-    const result = await pool.request() // Faz a requisição
+    const pool = await poolPromise;
+    const result = await pool.request()
+      .input('id_implem', sql.BigInt, user.id_implem)
       .input('nome', sql.VarChar(100), user.nome)
       .input('email', sql.VarChar(100), user.email)
+      .input('privilegios', sql.VarChar(50), user.privilegios)
       .input('senha', sql.VarChar(255), user.senha)
-      .input('role', sql.VarChar(20), user.role)
-      .input('data_criacao', sql.DateTime, user.data_criacao)
       .query(`
-        INSERT INTO dbo.usuariosmosaico (nome, email, senha, role, data_criacao)
-        VALUES (@nome, @email, @senha, @role, @data_criacao)
+        INSERT INTO dbo.usuariosmosaico (id_implem, nome, email, privilegios, senha)
+        VALUES (@id_implem, @nome, @email, @privilegios, @senha)
       `);
-    return result.rowsAffected;  // Retorna o número de linhas afetadas
+    return result.rowsAffected; // Retorna o número de linhas afetadas
   } catch (error) {
     console.error("Erro ao inserir usuário:", error);
     throw error;
@@ -38,24 +37,22 @@ const insertUser = async (user) => {
 // Função para atualizar um usuário no banco de dados
 const updateUser = async (user) => {
   try {
-    const pool = await poolPromise;  // Obtém a conexão do pool
-    const result = await pool.request() // Faz a requisição
-      .input('id', sql.BigInt, user.id)
+    const pool = await poolPromise;
+    const result = await pool.request()
+      .input('id_user', sql.Int, user.id_user)
       .input('nome', sql.VarChar(100), user.nome)
       .input('email', sql.VarChar(100), user.email)
+      .input('privilegios', sql.VarChar(50), user.privilegios)
       .input('senha', sql.VarChar(255), user.senha)
-      .input('role', sql.VarChar(20), user.role)
-      .input('data_atualizacao', sql.DateTime, user.data_atualizacao)
       .query(`
         UPDATE dbo.usuariosmosaico SET
           nome = @nome,
           email = @email,
-          senha = @senha,
-          role = @role,
-          data_atualizacao = @data_atualizacao
-        WHERE id = @id
+          privilegios = @privilegios,
+          senha = @senha
+        WHERE id_user = @id_user
       `);
-    return result.rowsAffected;  // Retorna o número de linhas afetadas
+    return result.rowsAffected; // Retorna o número de linhas afetadas
   } catch (error) {
     console.error("Erro ao atualizar usuário:", error);
     throw error;
@@ -63,13 +60,13 @@ const updateUser = async (user) => {
 };
 
 // Função para deletar um usuário do banco de dados
-const deleteUser = async (id) => {
+const deleteUser = async (id_user) => {
   try {
-    const pool = await poolPromise;  // Obtém a conexão do pool
-    const result = await pool.request() // Faz a requisição
-      .input('id', sql.BigInt, id)
-      .query('DELETE FROM dbo.usuariosmosaico WHERE id = @id');
-    return result.rowsAffected;  // Retorna o número de linhas afetadas
+    const pool = await poolPromise;
+    const result = await pool.request()
+      .input('id_user', sql.Int, id_user)
+      .query('DELETE FROM dbo.usuariosmosaico WHERE id_user = @id_user');
+    return result.rowsAffected; // Retorna o número de linhas afetadas
   } catch (error) {
     console.error("Erro ao deletar usuário:", error);
     throw error;
@@ -77,44 +74,46 @@ const deleteUser = async (id) => {
 };
 
 // Função para buscar um usuário específico por ID
-const getUserById = async (id) => {
+const getUserById = async (id_user) => {
   try {
-    const pool = await poolPromise;  // Obtém a conexão do pool
-    const result = await pool.request() // Faz a requisição
-      .input('id', sql.BigInt, id)
+    const pool = await poolPromise;
+    const result = await pool.request()
+      .input('id_user', sql.Int, id_user)
       .query(`
-        SELECT id, nome, email, senha, role, data_criacao, data_atualizacao
-        FROM dbo.usuariosmosaico WHERE id = @id
+        SELECT id_user, id_implem, nome, email, privilegios, senha
+        FROM dbo.usuariosmosaico WHERE id_user = @id_user
       `);
-    return result.recordset[0];  // Retorna o primeiro (e único) resultado
+    return result.recordset[0]; // Retorna o primeiro (e único) resultado
   } catch (error) {
     console.error("Erro ao buscar usuário por ID:", error);
-    throw error;  // Lança o erro para ser tratado no controlador
+    throw error; // Lança o erro para ser tratado no controlador
   }
 };
 
-// Função para buscar um usuário específico por email
-const getUserByEmail = async (email) => {
+// Função para verificar as credenciais de login
+const verifyCredentials = async (username, password) => {
   try {
-    const pool = await poolPromise;  // Obtém a conexão do pool
-    const result = await pool.request() // Faz a requisição
-      .input('email', sql.VarChar(100), email)
+    const pool = await poolPromise;
+    const result = await pool.request()
+      .input('nome', sql.VarChar(100), username)
+      .input('senha', sql.VarChar(255), password)
       .query(`
-        SELECT id, nome, email, senha, role, data_criacao, data_atualizacao
-        FROM dbo.usuariosmosaico WHERE email = @email
+        SELECT id_user, nome, email, privilegios 
+        FROM dbo.usuariosmosaico 
+        WHERE nome = @nome AND senha = @senha
       `);
-    return result.recordset[0];  // Retorna o primeiro (e único) resultado
+
+    return result.recordset[0]; // Retorna o usuário encontrado ou undefined
   } catch (error) {
-    console.error("Erro ao buscar usuário por email:", error);
-    throw error;  // Lança o erro para ser tratado no controlador
+    console.error("Erro ao verificar credenciais:", error);
+    throw error;
   }
 };
-
 module.exports = {
   insertUser,
   updateUser,
   deleteUser,
   getUsers,
   getUserById,
-  getUserByEmail
+  verifyCredentials
 };
