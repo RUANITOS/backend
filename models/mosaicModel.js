@@ -47,7 +47,7 @@ const updateMosaic = async (mosaic) => {
       .input('descricao_completa', sql.VarChar(30), mosaic.descricao_completa)
       .input('descricao_resumida', sql.VarChar(10), mosaic.descricao_resumida)
       .input('conteudo_efetivo', sql.Int, mosaic.conteudo_efetivo)
-      .input('origem_conteudo', sql.VarChar(150), mosaic.origem_conteudo)
+      .input('origem_conteudo', sql.VarChar(10000), mosaic.origem_conteudo)
       .query(`
         UPDATE dbo.mosaic SET
           posicao_linha = @posicao_linha, posicao_coluna = @posicao_coluna, 
