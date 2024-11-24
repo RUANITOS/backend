@@ -24,6 +24,7 @@ const fetchMosaics = async (req, res) => {
 const addMosaic = async (req, res) => {
     try {
         const mosaicData = {
+            id_implem: req.body.id_implem, // Inclui o id_implem
             posicao_linha: req.body.posicao_linha,
             posicao_coluna: req.body.posicao_coluna,
             titulo_celula: req.body.titulo_celula,
@@ -46,6 +47,7 @@ const modifyMosaic = async (req, res) => {
     try {
         const { id } = req.params;
         const mosaicData = {
+            id_implem: req.body.id_implem, // Inclui o id_implem
             posicao_linha: req.body.posicao_linha,
             posicao_coluna: req.body.posicao_coluna,
             titulo_celula: req.body.titulo_celula,

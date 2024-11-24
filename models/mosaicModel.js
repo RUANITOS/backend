@@ -8,8 +8,9 @@ const getMosaicos = async () => {
 // Função para inserir mosaico no banco de dados
 const insertMosaic = async (mosaic) => {
   try {
-    const pool = await poolPromise;  // Obtém a conexão do pool
+    const pool = await poolPromise; // Obtém a conexão do pool
     const result = await pool.request() // Faz a requisição
+      .input('id_implem', sql.Int, mosaic.id_implem) // Novo campo para ID de implementação
       .input('posicao_linha', sql.Int, mosaic.posicao_linha)
       .input('posicao_coluna', sql.Int, mosaic.posicao_coluna)
       .input('titulo_celula', sql.VarChar(30), mosaic.titulo_celula)
@@ -20,14 +21,16 @@ const insertMosaic = async (mosaic) => {
       .input('origem_conteudo', sql.VarChar(150), mosaic.origem_conteudo)
       .query(`
         INSERT INTO dbo.mosaic (
-          dt_criacao, posicao_linha, posicao_coluna, titulo_celula, id_icone, 
-          descricao_completa, descricao_resumida, dt_ultima_atualizacao, 
+          id_implem, dt_criacao, posicao_linha, posicao_coluna, titulo_celula, 
+          id_icone, descricao_completa, descricao_resumida, dt_ultima_atualizacao, 
           conteudo_efetivo, origem_conteudo
-        ) VALUES (GETDATE(), @posicao_linha, @posicao_coluna, @titulo_celula, 
+        ) VALUES (
+          @id_implem, GETDATE(), @posicao_linha, @posicao_coluna, @titulo_celula, 
           @id_icone, @descricao_completa, @descricao_resumida, GETDATE(), 
-          @conteudo_efetivo, @origem_conteudo)
+          @conteudo_efetivo, @origem_conteudo
+        )
       `);
-    return result.rowsAffected;  // Retorna o número de linhas afetadas
+    return result.rowsAffected; // Retorna o número de linhas afetadas
   } catch (error) {
     console.error("Erro ao inserir mosaico:", error);
     throw error;
@@ -39,6 +42,7 @@ const updateMosaic = async (mosaic) => {
   try {
     const pool = await poolPromise;  // Obtém a conexão do pool
     const result = await pool.request() // Faz a requisição
+    .input('id_implem', sql.Int, mosaic.id_implem) // Novo campo para ID de implementação
       .input('id', sql.BigInt, mosaic.id)
       .input('posicao_linha', sql.Int, mosaic.posicao_linha)
       .input('posicao_coluna', sql.Int, mosaic.posicao_coluna)
@@ -51,7 +55,7 @@ const updateMosaic = async (mosaic) => {
       .query(`
         UPDATE dbo.mosaic SET
           posicao_linha = @posicao_linha, posicao_coluna = @posicao_coluna, 
-          titulo_celula = @titulo_celula, id_icone = @id_icone, 
+          titulo_celula = @titulo_celula, id_icone = @id_icone, id_implem = @id_implem,
           descricao_completa = @descricao_completa, descricao_resumida = @descricao_resumida, 
           dt_ultima_atualizacao = GETDATE(), conteudo_efetivo = @conteudo_efetivo, 
           origem_conteudo = @origem_conteudo
