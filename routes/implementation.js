@@ -6,7 +6,8 @@ const {
   removeImplementation,
   fetchImplementationById,
   fetchImplementationByPosition, // Importa a função para busca por posição
-  modifyImplementationPosition
+  modifyImplementationPosition,
+  fetchImplementationNamesAndIds 
 } = require('../controllers/implementationController');
 
 const router = express.Router();
@@ -31,5 +32,8 @@ router.get('/position/:row/:col', fetchImplementationByPosition);
 
 // Rota para modificar apenas a posição de uma implementação
 router.put('/modify-position/:id', modifyImplementationPosition);
+
+// Rota para buscar nomes e IDs das implementações
+router.get('/namesandids/:id', fetchImplementationNamesAndIds);
 
 module.exports = router;

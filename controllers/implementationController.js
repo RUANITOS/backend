@@ -6,8 +6,19 @@ const {
     deleteImplementation,
     getImplementationById,
     getImplementationByPosition,
-    updateImplementationPosition
+    updateImplementationPosition,
+    getImplementationNamesAndIds 
   } = require('../models/implementationModel');
+  // Função para buscar os nomes e IDs das implementações
+const fetchImplementationNamesAndIds = async (req, res) => {
+  try {
+    const implementationNamesAndIds = await getImplementationNamesAndIds(); // Chama a função do model
+    res.status(200).json(implementationNamesAndIds); // Retorna os dados em formato JSON
+  } catch (error) {
+    console.error("Erro ao buscar nomes e IDs das implementações:", error); // Log detalhado do erro
+    res.status(500).json({ message: "Erro ao buscar nomes e IDs das implementações", error });
+  }
+};
   
   // Função para buscar todas as implementações do banco de dados
   const fetchImplementations = async (req, res) => {
@@ -126,6 +137,7 @@ const {
     removeImplementation,
     fetchImplementationById,
     fetchImplementationByPosition,
-    modifyImplementationPosition
+    modifyImplementationPosition,
+    fetchImplementationNamesAndIds
   };
   

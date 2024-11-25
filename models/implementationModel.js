@@ -72,6 +72,18 @@ const insertImplementation = async (implementation) => {
     throw error;
   }
 };
+// Função para buscar todos os nomes e IDs das implementações
+const getImplementationNamesAndIds = async () => {
+  try {
+    const pool = await poolPromise; // Obtém a conexão do pool
+    const result = await pool.request() // Faz a requisição
+      .query('SELECT id_implem, nome_implementacao FROM dbo.implementacaomosaico'); // Executa a query
+    return result.recordset; // Retorna os resultados da query
+  } catch (error) {
+    console.error("Erro ao buscar nomes e IDs das implementações:", error);
+    throw error; // Lança o erro para ser tratado no controlador
+  }
+};
 
 // Função para atualizar uma implementação no banco de dados
 const updateImplementation = async (implementation) => {
@@ -136,5 +148,6 @@ module.exports = {
   getImplementationById,
   insertImplementation,
   updateImplementation,
-  deleteImplementation
+  deleteImplementation,
+  getImplementationNamesAndIds
 };
