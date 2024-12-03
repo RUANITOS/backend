@@ -56,6 +56,14 @@ const getIconById = async (icon_id) => {
     .query('SELECT * FROM icons WHERE icon_id = @icon_id');
   return result.recordset[0]; // Retorna o primeiro (e único) resultado
 };
+// Função para buscar ícones por id_implementacao
+const getIconById_implem = async (id_implementacao) => {
+  const pool = await poolPromise;  // Obtém a conexão do pool
+  const result = await pool.request()
+    .input('id_implementacao', sql.BigInt, id_implementacao)
+    .query('SELECT * FROM icons WHERE id_implementacao = @id_implementacao');
+  return result.recordset; // Retorna os resultados da query
+};
 
 module.exports = {
   insertIcon,
@@ -63,4 +71,5 @@ module.exports = {
   deleteIcon,
   getIcons,
   getIconById,
+  getIconById_implem
 };

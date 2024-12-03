@@ -1,6 +1,6 @@
 // backend/routes/iconRoutes.js
 const express = require('express');
-const { fetchIcons, addIcon, modifyIcon, removeIcon,fetchIconIds, fetchIconById } = require('../controllers/iconController');
+const { fetchIcons, addIcon, modifyIcon, removeIcon,fetchIconIds, fetchIconById, fetchIconsByImplementation  } = require('../controllers/iconController');
 
 const router = express.Router();
 
@@ -21,5 +21,7 @@ router.delete('/delete/:icon_id', removeIcon); // Use DELETE para remover
 
 // Rota para buscar um ícone específico por ID
 router.get('/:icon_id', fetchIconById); // Nova rota para buscar ícone específico
+
+router.get('/implementation/:id_implementacao', fetchIconsByImplementation);
 
 module.exports = router;

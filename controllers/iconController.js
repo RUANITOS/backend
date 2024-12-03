@@ -1,5 +1,5 @@
 // backend/controllers/iconController.js
-const { insertIcon, getIcons, updateIcon, deleteIcon, getIconById } = require('../models/iconModel');
+const { insertIcon, getIcons, updateIcon, deleteIcon, getIconById,getIconById_implem   } = require('../models/iconModel');
 
 // Função para buscar todos os ícones do banco de dados
 const fetchIcons = async (req, res) => {
@@ -29,6 +29,21 @@ const addIcon = async (req, res) => {
     res.status(201).json({ message: 'Ícone adicionado com sucesso!' });
   } catch (error) {
     res.status(500).json({ message: 'Erro ao adicionar ícone', error });
+  }
+};
+// Função para buscar ícones por id_implementacao
+const fetchIconsByImplementation = async (req, res) => {
+  try {
+    const { id_implementacao } = req.params;
+    const icons = await getIconById_implem(id_implementacao);
+
+    if (!icons.length) {
+      return res.status(404).json({ message: 'Nenhum ícone encontrado para esta implementação' });
+    }
+
+    res.status(200).json(icons);
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao buscar ícones por implementação', error });
   }
 };
 
@@ -98,4 +113,5 @@ module.exports = {
   removeIcon,
   fetchIconIds,
   fetchIconById,
+  fetchIconsByImplementation
 };
